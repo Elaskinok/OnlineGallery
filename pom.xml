@@ -7,6 +7,15 @@
     <groupId>org.server</groupId>
     <artifactId>Server</artifactId>
     <version>1.0</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <spring.version>5.2.3.RELEASE</spring.version>
+        <hibernate.version>5.4.12.Final</hibernate.version>
+        <postgresql.diver.version>9.1-901-1.jdbc4</postgresql.diver.version>
+        <tomcat.version>9.0.27</tomcat.version>
+        <servlet.api.version>4.0.1</servlet.api.version>
+    </properties>
 
     <build>
         <plugins>
@@ -21,4 +30,38 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.diver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-dbcp</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
