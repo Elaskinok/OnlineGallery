@@ -1,2 +1,1 @@
-# OnlineGallery
 # OnlineGallery | FOR DEVELOPER
