@@ -12,9 +12,10 @@
     <properties>
         <spring.version>5.2.3.RELEASE</spring.version>
         <hibernate.version>5.4.12.Final</hibernate.version>
-        <postgresql.diver.version>9.1-901-1.jdbc4</postgresql.diver.version>
+        <postgresql.driver.version>42.2.5</postgresql.driver.version>
         <tomcat.version>9.0.27</tomcat.version>
         <servlet.api.version>4.0.1</servlet.api.version>
+        <jstl.version>1.2</jstl.version>
     </properties>
 
     <build>
@@ -48,11 +49,6 @@
             <version>${hibernate.version}</version>
         </dependency>
         <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.diver.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-dbcp</artifactId>
             <version>${tomcat.version}</version>
@@ -62,6 +58,16 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet.api.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.driver.version}</version>
         </dependency>
     </dependencies>
 </project>

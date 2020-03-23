@@ -6,7 +6,9 @@
     </facet>
     <facet type="hibernate" name="Hibernate">
       <configuration>
-        <datasource-map />
+        <datasource-map>
+          <unit-entry name="sessionFactory" value="0204ac97-6717-4596-b19d-cb1171c8e2ab" />
+        </datasource-map>
         <naming-strategy-map />
       </configuration>
     </facet>
