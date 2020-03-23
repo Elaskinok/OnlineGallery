@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class WelcomePageController {
@@ -40,8 +41,11 @@ public class WelcomePageController {
     @RequestMapping(value = "/drag-image", method = RequestMethod.POST)
     public ModelAndView saveImage(@RequestParam("file") MultipartFile file) throws IOException {
         var modelAndView = new ModelAndView();
-        System.out.println(Arrays.toString(file.getBytes()));
-        modelAndView.setViewName("ImageLoader");
+        Image image = new Image();
+        image.setName(file.getName());
+        image.setImageBytes(file.getBytes());
+        service.saveImage(image);
+        modelAndView.setViewName("WelcomePage");
         return modelAndView;
     }
 
@@ -64,11 +68,9 @@ public class WelcomePageController {
     public ModelAndView getAllImages() throws UnsupportedEncodingException {
         var modelAndView = new ModelAndView();
         var images = service.allImages();
-        for(var image : images) {
-            System.out.println(image.getId() + ": " + image.getImageBytes().length);
-        }
-        modelAndView.addObject("images", images);
-        modelAndView.addObject("Photo", ImageConverter.convertBytesToString(images.get(0).getImageBytes()));
+        List<String> imagesToLoad = ImageConverter.convertImagesToString(images);
+
+        modelAndView.addObject("images", imagesToLoad);
         modelAndView.setViewName("ImagePresentation");
         return modelAndView;
     }

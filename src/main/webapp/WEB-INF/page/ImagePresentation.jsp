@@ -14,10 +14,14 @@
 <body>
     <h1>Image presentation</h1>
 
-    <c:forEach var="image" items="${images}">
-        <img src="data:image/jpg;base64,${image.imageBytes}" alt="${image.name}">
-    </c:forEach>
-
-    <img src="data:image/jpg;base64,${Photo}" alt="photo">
+    <table id="image_table">
+        <tr>
+            <c:forEach var="image" items="${images}">
+                <td>
+                    <img src="data:image/jpg;base64,${image}" width="250" height="200">
+                </td>
+            </c:forEach>
+        </tr>
+    </table>
 </body>
 </html>

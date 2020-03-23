@@ -11,18 +11,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Save image</title>
-    <link rel="stylesheet" href="../../style/ImageLoader.css">
-    <script type="text/javascript" src="../../js/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="../../js/script.js"></script>
+    <link href="../../style/ImageLoader.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-<form id="upload-container" method="POST" action="/drag-image">
-    <img id="upload-image" src="data:image/jpg;base64,${dragPicture}" alt="picture" width="200" height="200">
-    <div>
-        <input id="file-input" type="file" name="file" multiple>
-        <label for="file-input">Choose file</label>
-<%--        <span>you can drag it here</span>--%>
-    </div>
+<form method="post" action="/drag-image" enctype="multipart/form-data"><%--
+    <img id="upload-image" src="data:image/jpg;base64,${dragPicture}" alt="picture" width="200" height="200">--%>
+    <input id="file-input" type="file" name="file" multiple>
+    <input type="submit" value="Save">
 </form>
 </body>
 </html>
