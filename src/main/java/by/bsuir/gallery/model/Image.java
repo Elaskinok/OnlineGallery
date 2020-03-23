@@ -10,6 +10,9 @@ public class Image {
     @Column(name = "id")
     private long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "image")
     private byte[] imageBytes;
 
@@ -27,5 +30,13 @@ public class Image {
 
     public void setImageBytes(byte[] imageBytes) {
         this.imageBytes = imageBytes;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
