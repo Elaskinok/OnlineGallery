@@ -1,0 +1,26 @@
+[
+	{
+		"idAlbum": 1,
+		"name": "in the forest",
+		"username": "alcocholic3000",
+		"idUser":1,
+		"photo":
+		[
+			{
+				"idPhoto": 1,
+				"name": "I with friends are drinking beer in the forest",
+				"byteArray": "1745678900987654AE1235F",
+			},
+			{
+				"idPhoto": 2,
+				"name": "I with friends are swiming in the river",
+				"byteArray": "44565787654324463FF134",
+			},
+			{
+				"idPhoto": 3,
+				"name": "I with friends are dying on the bench",
+				"byteArray": "87574354232646436AE453",
+			}, 
+		]
+	}
+]
