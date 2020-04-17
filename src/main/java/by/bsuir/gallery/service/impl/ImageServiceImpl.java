@@ -1,6 +1,6 @@
 package by.bsuir.gallery.service.impl;
 
-import by.bsuir.gallery.model.Image;
+import by.bsuir.gallery.model.Photo;
 import by.bsuir.gallery.repository.ImageRepository;
 import by.bsuir.gallery.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Transactional
-    public boolean saveImage(Image image) {
-        return repository.saveImage(image);
+    public boolean saveImage(Photo photo) {
+        return repository.saveImage(photo);
     }
 
     @Transactional
-    public List<Image> allImages() {
+    public List<Photo> allImages() {
         return repository.allImages();
     }
 }

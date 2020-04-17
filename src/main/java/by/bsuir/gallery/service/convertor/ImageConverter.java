@@ -1,6 +1,6 @@
 package by.bsuir.gallery.service.convertor;
 
-import by.bsuir.gallery.model.Image;
+import by.bsuir.gallery.model.Photo;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.UnsupportedEncodingException;
@@ -18,11 +18,11 @@ public class ImageConverter {
         return stringToReturn;
     }
 
-    public static List<String> convertImagesToString(List<Image> images) throws UnsupportedEncodingException {
+    public static List<String> convertImagesToString(List<Photo> photos) throws UnsupportedEncodingException {
         List<String> listToReturn = new LinkedList<>();
 
-        for (Image image : images) {
-            var currentValue = convertBytesToString(image.getImageBytes());
+        for (Photo photo : photos) {
+            var currentValue = convertBytesToString(photo.getImageBytes());
             listToReturn.add(currentValue);
         }
 

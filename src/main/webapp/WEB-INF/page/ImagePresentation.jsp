@@ -9,9 +9,9 @@
 
     <table id="image_table">
         <tr>
-            <c:forEach var="image" items="${stringImages}">
+            <c:forEach var="photo" items="${stringImages}">
                 <td>
-                    <img src="data:image/jpg;base64,${image}" width="250" height="200">
+                    <img src="data:photo/jpg;base64,${photo}" width="250" height="200">
                 </td>
             </c:forEach>
         </tr>

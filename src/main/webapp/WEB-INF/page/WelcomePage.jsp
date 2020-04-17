@@ -5,11 +5,11 @@
 </head>
 <body>
     <h1>Online Gallery</h1>
-    <form id="save_page_button" action="/save-image" method="get">
-        <input type="submit" value="Save image">
+    <form id="save_page_button" action="/save-photo" method="get">
+        <input type="submit" value="Save photo">
     </form>
-    <form id="show_page_button" action="/show-all-images" method="get">
-        <input type="submit" value="show all images">
+    <form id="show_page_button" action="/show-all-photos" method="get">
+        <input type="submit" value="show all photos">
     </form>
 </body>
 </html>

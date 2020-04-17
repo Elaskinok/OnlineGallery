@@ -1,6 +1,9 @@
 package by.bsuir.gallery.controller;
 
-import by.bsuir.gallery.model.Image;
+import by.bsuir.gallery.model.Album;
+import by.bsuir.gallery.model.Password;
+import by.bsuir.gallery.model.Photo;
+import by.bsuir.gallery.model.User;
 import by.bsuir.gallery.service.ImageService;
 import by.bsuir.gallery.service.convertor.ImageConverter;
 import by.bsuir.gallery.service.parser.PictureParser;
@@ -35,10 +38,16 @@ public class MainController {
     @RequestMapping(value = "/save-image", method = RequestMethod.POST)
     public ModelAndView saveImage(@RequestParam("picture") MultipartFile picture) throws IOException {
         var modelAndView = new ModelAndView();
-        Image image = new Image();
-        image.setName(picture.getName());
-        image.setImageBytes(picture.getBytes());
-        service.saveImage(image);
+        Photo photo = new Photo();
+        User user = new User();
+        Album album = new Album();
+        Password password = new Password();
+
+        user.setUsername("Alcocholic3000");
+        password.setPasswordHash("qwe");
+        photo.setName(picture.getName());
+        photo.setByteArray(picture.getBytes());
+        service.saveImage(photo);
         modelAndView.setViewName("WelcomePage");
         return modelAndView;
     }
