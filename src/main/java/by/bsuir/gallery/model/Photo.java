@@ -1,5 +1,8 @@
 package by.bsuir.gallery.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -7,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "photo")
 public class Photo implements Serializable {
     @Id
@@ -34,52 +39,4 @@ public class Photo implements Serializable {
             joinColumns = {@JoinColumn(name = "idPhoto")},
             inverseJoinColumns = {@JoinColumn(name = "idAlbum")})
     private List<Album> albumSet = new LinkedList<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public byte[] getByteArray() {
-        return byteArray;
-    }
-
-    public void setByteArray(byte[] byteArray) {
-        this.byteArray = byteArray;
-    }
-
-    public boolean isPrivate() {
-        return isPrivate;
-    }
-
-    public void setPrivate(boolean aPrivate) {
-        isPrivate = aPrivate;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getPhotoDescription() {
-        return photoDescription;
-    }
-
-    public void setPhotoDescription(String photoDescription) {
-        this.photoDescription = photoDescription;
-    }
-
-    public List<Album> getAlbumSet() {
-        return albumSet;
-    }
-
-    public void setAlbumSet(List<Album> albumSet) {
-        this.albumSet = albumSet;
-    }
 }
