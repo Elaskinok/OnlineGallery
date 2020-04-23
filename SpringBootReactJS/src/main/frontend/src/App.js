@@ -22,7 +22,11 @@ const UserProfiles = () => {
   return userProfiles.map((userProfile, index) => {
     return (
       <div key={index}>
-        {/* todo: profile image */}
+        {userProfile.userProfileId ? (
+          <img 
+            src={'http://localhost:8080/api/v1/user-profile/' + userProfile.userProfileId + '/image/download'}
+          />
+        ) : null}
         <br/>
         <br/>        
         <h1>{userProfile.username}</h1>
@@ -44,7 +48,7 @@ function Dropzone({userProfileId}) {
     formData.append("file", file);
     // check it out
     axios.post(
-      'http://localhost:8080/api/v1/user-profile/${userProfileId}/image/upload',
+      'http://localhost:8080/api/v1/user-profile/' + userProfileId + '/image/upload',
       formData, 
       {
         headers: {
