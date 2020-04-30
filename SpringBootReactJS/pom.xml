@@ -46,7 +46,6 @@
 			<version>1.11.766</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>

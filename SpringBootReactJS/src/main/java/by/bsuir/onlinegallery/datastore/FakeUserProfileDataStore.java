@@ -20,4 +20,21 @@ public class FakeUserProfileDataStore {
     public List<UserProfile> getUserProfiles() {
         return USER_PROFILES;
     }
+
+    public void addUserProfile(UserProfile profile) {
+        USER_PROFILES.add(profile);
+    }
+
+    public boolean contains(UserProfile profile) {
+        return USER_PROFILES.stream()
+                .anyMatch(
+                        p -> profile
+                        .getUserProfileId()
+                        .equals(p.getUserProfileId()))
+                ;
+    }
+
+    public void uploadProfile(UserProfile profile) {
+        USER_PROFILES.add(profile);
+    }
 }

@@ -19,4 +19,8 @@ public class UserProfileDataAccessService {
     List<UserProfile> getUserProfiles() {
         return fakeUserProfileDataStore.getUserProfiles();
     }
+
+    public void saveProfile(UserProfile profile) {
+        fakeUserProfileDataStore.uploadProfile(profile);
+    }
 }

@@ -28,6 +28,10 @@ public class UserProfileService {
         return userProfileDataAccessService.getUserProfiles();
     }
 
+    public void saveProfile(UserProfile profile) {
+        userProfileDataAccessService.saveProfile(profile);
+    }
+
     public void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
         isFileEmpty(file);
         isImage(file);
