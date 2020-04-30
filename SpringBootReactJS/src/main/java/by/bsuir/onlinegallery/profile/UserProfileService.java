@@ -2,9 +2,9 @@ package by.bsuir.onlinegallery.profile;
 
 import by.bsuir.onlinegallery.bucket.BucketName;
 import by.bsuir.onlinegallery.filestore.FileStore;
+import by.bsuir.onlinegallery.repository.impl.UserProfileRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,21 +15,21 @@ import static org.apache.http.entity.ContentType.*;
 @Service
 public class UserProfileService {
 
-    private final UserProfileDataAccessService userProfileDataAccessService;
+    private final UserProfileRepositoryImpl userProfileRepositoryImpl;
     private final FileStore fileStore;
 
     @Autowired
-    public UserProfileService(UserProfileDataAccessService userProfileDataAccessService, FileStore fileStore) {
-        this.userProfileDataAccessService = userProfileDataAccessService;
+    public UserProfileService(UserProfileRepositoryImpl userProfileRepositoryImpl, FileStore fileStore) {
+        this.userProfileRepositoryImpl = userProfileRepositoryImpl;
         this.fileStore = fileStore;
     }
 
     public List<UserProfile> getUserProfiles() {
-        return userProfileDataAccessService.getUserProfiles();
+        return userProfileRepositoryImpl.getUserProfiles();
     }
 
     public void saveProfile(UserProfile profile) {
-        userProfileDataAccessService.saveProfile(profile);
+        userProfileRepositoryImpl.saveProfile(profile);
     }
 
     public void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
@@ -67,7 +67,7 @@ public class UserProfileService {
     }
 
     private UserProfile getUserProfileOrThrow(UUID userProfileId) {
-        return userProfileDataAccessService
+        return userProfileRepositoryImpl
                 .getUserProfiles()
                 .stream()
                 .filter(userProfile -> userProfile.getUserProfileId().equals(userProfileId))

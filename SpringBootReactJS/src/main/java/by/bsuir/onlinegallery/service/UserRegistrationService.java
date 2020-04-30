@@ -1,5 +1,7 @@
 package by.bsuir.onlinegallery.service;
 
-public interface UserRegistrationService {
+import by.bsuir.onlinegallery.profile.UserProfile;
 
+public interface UserRegistrationService {
+    String add(UserProfile profile);
 }

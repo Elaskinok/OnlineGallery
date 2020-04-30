@@ -12,8 +12,15 @@ public interface UserRegistrationValidator extends Function<UserProfile, Validat
 
     static UserRegistrationValidator isUsernameExisted(List<UserProfile> profiles) {
         return profile -> profiles.stream()
-                .noneMatch(p -> p.getUsername().equals(profile)) ?
+                .noneMatch(p -> p.getUsername().equals(profile.getUsername())) ?
                 SUCCESS : USERNAME_ALREADY_EXISTS;
+    }
+
+    default UserRegistrationValidator and (UserRegistrationValidator other) {
+        return profile -> {
+            ValidationResult result = this.apply(profile);
+            return result.equals(SUCCESS) ? other.apply(profile) : result;
+        };
     }
 
     enum ValidationResult {
