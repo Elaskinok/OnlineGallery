@@ -1,5 +1,6 @@
 package by.bsuir.onlinegallery.repository.impl;
 
+import by.bsuir.onlinegallery.datastore.FakePasswordStore;
 import by.bsuir.onlinegallery.datastore.FakeUserProfileDataStore;
 import by.bsuir.onlinegallery.profile.UserProfile;
 import by.bsuir.onlinegallery.repository.UserProfileRepository;
@@ -7,15 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Repository
 public class UserProfileRepositoryImpl implements UserProfileRepository {
 
     private final FakeUserProfileDataStore fakeUserProfileDataStore;
+    private final FakePasswordStore fakePasswordStore;
 
     @Autowired
-    public UserProfileRepositoryImpl(FakeUserProfileDataStore fakeUserProfileDataStore) {
+    public UserProfileRepositoryImpl(FakeUserProfileDataStore fakeUserProfileDataStore,
+                                     FakePasswordStore fakePasswordStore) {
+
         this.fakeUserProfileDataStore = fakeUserProfileDataStore;
+        this.fakePasswordStore = fakePasswordStore;
     }
 
     @Override
@@ -24,7 +31,12 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     }
 
     @Override
-    public List<UserProfile> findAll() {
+    public List<UserProfile> findAllProfiles() {
         return fakeUserProfileDataStore.getUserProfiles();
+    }
+
+    @Override
+    public Map<UUID, String> findAllPasswords() {
+        return fakePasswordStore.findAll();
     }
 }

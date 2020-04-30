@@ -20,7 +20,7 @@ public class FakePasswordStore {
         passwords.computeIfAbsent(uuid, v -> password);
     }
 
-    public List<String> findAll() {
-        return new ArrayList<>(passwords.values());
+    public Map<UUID, String> findAll() {
+        return new LinkedHashMap<>(passwords);
     }
 }

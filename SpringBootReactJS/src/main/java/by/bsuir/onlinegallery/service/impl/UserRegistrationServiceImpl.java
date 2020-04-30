@@ -23,7 +23,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Override
     public String add(UserProfile profile) {
         //Using combinator pattern
-        ValidationResult result = isUsernameExisted(repository.findAll()).apply(profile);
+        ValidationResult result = isUsernameExisted(repository.findAllProfiles()).apply(profile);
         if (result == SUCCESS) {
             repository.add(profile);
         }
