@@ -24,7 +24,7 @@ public class UserProfileService {
         this.fileStore = fileStore;
     }
 
-    List<UserProfile> getUserProfiles() {
+    public List<UserProfile> getUserProfiles() {
         return userProfileDataAccessService.getUserProfiles();
     }
 

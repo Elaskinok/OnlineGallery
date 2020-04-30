@@ -8,11 +8,13 @@ public class UserProfile {
 
     private final UUID userProfileId;
     private final String username;
+    private final String password;
     private String userProfileImageLink; // S3 key
 
-    public UserProfile(UUID userProfileId, String username, String userProfileImageLink) {
+    public UserProfile(UUID userProfileId, String username, String password, String userProfileImageLink) {
         this.userProfileId = userProfileId;
         this.username = username;
+        this.password = password;
         this.userProfileImageLink = userProfileImageLink;
     }
 
@@ -22,6 +24,10 @@ public class UserProfile {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Optional<String> getUserProfileImageLink() {
