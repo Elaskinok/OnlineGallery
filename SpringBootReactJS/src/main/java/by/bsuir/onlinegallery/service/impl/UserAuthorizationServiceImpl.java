@@ -1,7 +1,8 @@
-package by.bsuir.onlinegallery.service;
+package by.bsuir.onlinegallery.service.impl;
 
 import by.bsuir.onlinegallery.profile.UserProfile;
 import by.bsuir.onlinegallery.repository.UserProfileRepository;
+import by.bsuir.onlinegallery.service.UserAuthorizationService;
 import by.bsuir.onlinegallery.service.validator.UserAuthorizationValidator;
 import by.bsuir.onlinegallery.service.validator.UserAuthorizationValidator.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;

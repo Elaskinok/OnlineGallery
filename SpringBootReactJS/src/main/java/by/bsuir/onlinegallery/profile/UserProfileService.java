@@ -25,11 +25,11 @@ public class UserProfileService {
     }
 
     public List<UserProfile> getUserProfiles() {
-        return userProfileRepositoryImpl.getUserProfiles();
+        return userProfileRepositoryImpl.findAllProfiles();
     }
 
     public void saveProfile(UserProfile profile) {
-        userProfileRepositoryImpl.saveProfile(profile);
+        userProfileRepositoryImpl.add(profile);
     }
 
     public void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
@@ -68,7 +68,7 @@ public class UserProfileService {
 
     private UserProfile getUserProfileOrThrow(UUID userProfileId) {
         return userProfileRepositoryImpl
-                .getUserProfiles()
+                .findAllProfiles()
                 .stream()
                 .filter(userProfile -> userProfile.getUserProfileId().equals(userProfileId))
                 .findFirst()
