@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -28,6 +29,14 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     @Override
     public void add(UserProfile profile) {
         fakeUserProfileDataStore.uploadProfile(profile);
+    }
+
+    @Override
+//    TODO searching by username so far
+    public Optional<UserProfile> findByUsername(String username) {
+        return fakeUserProfileDataStore.getUserProfiles().stream()
+                .filter(profile -> profile.getUsername().equals(username))
+                .findFirst();
     }
 
     @Override
