@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -36,23 +37,32 @@ public class AlbumService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        List<PagedResponse<Album>> pagedResponseList = new ArrayList<>();
-
         List<Album> albums = albumRepository.findAlbumById(user.getId());
 
-        for (Album album : albums) {
-            List<Image> images = imageRepository.findAllByAlbum(album);
-            System.out.println(images);
-        }
-        System.out.println(albums);
-        return null;
+//        for (Album album : albums) {
+//            List<Image> images = imageRepository.findAllByAlbum(album);
+//            System.out.println(images);
+//        }
+//        System.out.println(albums);
+        return new PagedResponse<>(albums, 1, albums.size(), 1, true);
     }
 
     public Album createAlbum(AlbumRequest albumRequest) {
-        return null;
+        Album album = toAlbumModel(albumRequest);
+        return albumRepository.save(album);
     }
 
     public boolean existsByAlbumName(String name) {
         return albumRepository.existsByName(name);
+    }
+
+    private Album toAlbumModel(AlbumRequest albumRequest) {
+        Album album = new Album();
+        album.setName(albumRequest.getName());
+        album.setDescription(albumRequest.getDescription());
+        album.setPrivate(albumRequest.getPrivate());
+        album.setImages(Collections.emptyList());
+
+        return album;
     }
 }

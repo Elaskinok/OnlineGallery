@@ -51,6 +51,6 @@ public class AlbumController {
                 .buildAndExpand(savedAlbum.getId()).toUri();
 
         return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "Album has been saved successfully"));
+                .body(new ApiResponse(true, "Album has been created successfully"));
     }
 }

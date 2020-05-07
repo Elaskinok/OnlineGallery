@@ -27,6 +27,8 @@ public class Album extends UserDateAudit {
     @Size(max = 50)
     private String name;
 
+    private boolean isPrivate;
+
     @NotBlank
     @Size(max = 255)
     private String description;
@@ -39,6 +41,14 @@ public class Album extends UserDateAudit {
     )
     @Fetch(FetchMode.SELECT)
     private List<Image> images;
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
 
     public Long getId() {
         return id;
