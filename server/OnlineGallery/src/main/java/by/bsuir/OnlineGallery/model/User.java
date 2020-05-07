@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 @Entity
@@ -42,7 +43,7 @@ public class User extends DateAudit {
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
+    @JoinTable(name = "user_role_xref",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
@@ -52,6 +53,7 @@ public class User extends DateAudit {
     }
 
     public User(String name, String username, String email, String password) {
+        this.id = new Random().nextLong();
         this.name = name;
         this.username = username;
         this.email = email;
