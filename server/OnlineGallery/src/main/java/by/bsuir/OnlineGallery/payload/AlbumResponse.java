@@ -1,30 +1,29 @@
 package by.bsuir.OnlineGallery.payload;
 
-import by.bsuir.OnlineGallery.model.Image;
-import by.bsuir.OnlineGallery.model.User;
-
 import java.util.List;
 
 public class AlbumResponse {
-    private final Long id;
-    private final List<Image> images;
-    private final User creator;
+    private final Long albumId;
+    private final String albumName;
+    private final Long creatorId;
+    private final List<ImageResponse> images;
 
-    public AlbumResponse(Long id, List<Image> images, User creator) {
-        this.id = id;
+    public AlbumResponse(Long albumId, String albumName, List<ImageResponse> images, Long creatorId) {
+        this.albumId = albumId;
+        this.albumName = albumName;
         this.images = images;
-        this.creator = creator;
+        this.creatorId = creatorId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getAlbumId() {
+        return albumId;
     }
 
-    public List<Image> getImages() {
+    public List<ImageResponse> getImages() {
         return images;
     }
 
-    public User getCreator() {
-        return creator;
+    public Long getCreatorId() {
+        return creatorId;
     }
 }

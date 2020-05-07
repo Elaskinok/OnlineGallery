@@ -5,6 +5,8 @@ import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.model.Image;
 import by.bsuir.OnlineGallery.model.User;
 import by.bsuir.OnlineGallery.payload.AlbumRequest;
+import by.bsuir.OnlineGallery.payload.AlbumResponse;
+import by.bsuir.OnlineGallery.payload.ImageResponse;
 import by.bsuir.OnlineGallery.payload.PagedResponse;
 import by.bsuir.OnlineGallery.repository.AlbumRepository;
 import by.bsuir.OnlineGallery.repository.ImageRepository;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,18 +36,14 @@ public class AlbumService {
         this.userRepository = userRepository;
     }
 
-    public PagedResponse<Album> findAlbumsCreatedBy(String username) {
+    public PagedResponse<AlbumResponse> findAlbumsCreatedBy(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
         List<Album> albums = albumRepository.findAlbumById(user.getId());
 
-//        for (Album album : albums) {
-//            List<Image> images = imageRepository.findAllByAlbum(album);
-//            System.out.println(images);
-//        }
-//        System.out.println(albums);
-        return new PagedResponse<>(albums, 1, albums.size(), 1, true);
+        List<AlbumResponse> albumResponses = toAlbumResponse(albums);
+        return new PagedResponse<>(albumResponses, 1, albumResponses.size(), 1, true);
     }
 
     public Album createAlbum(AlbumRequest albumRequest) {
@@ -64,5 +63,23 @@ public class AlbumService {
         album.setImages(Collections.emptyList());
 
         return album;
+    }
+
+    private List<AlbumResponse> toAlbumResponse(List<Album> albums) {
+        List<AlbumResponse> albumResponses = new ArrayList<>();
+        for (Album album : albums) {
+            List<Image> images = imageRepository.findAllByAlbum(album);
+
+            List<ImageResponse> imageResponses = new ArrayList<>();
+            for (Image image : images) {
+//                TODO: make a byte-string conversion
+                ImageResponse imageResponse = new ImageResponse(image.getId(),
+                        image.getName(), Arrays.toString(image.getByteArray()), image.isPrivate());
+                imageResponses.add(imageResponse);
+            }
+            albumResponses.add(new AlbumResponse(album.getId(), album.getName(), imageResponses, album.getCreatedBy()));
+        }
+
+        return albumResponses;
     }
 }

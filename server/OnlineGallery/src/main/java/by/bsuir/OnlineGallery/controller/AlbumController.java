@@ -40,7 +40,7 @@ public class AlbumController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createAlbum(@Valid @RequestBody AlbumRequest albumRequest) {
         if (albumService.existsByAlbumName(albumRequest.getName())) {
-            return new ResponseEntity(new ApiResponse(false, "Album is already existed!"),
+            return new ResponseEntity<>(new ApiResponse(false, "Album is already existed!"),
                     HttpStatus.BAD_REQUEST);
         }
 
