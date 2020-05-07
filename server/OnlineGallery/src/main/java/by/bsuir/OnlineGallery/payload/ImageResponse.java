@@ -1,17 +1,20 @@
 package by.bsuir.OnlineGallery.payload;
 
-public class ImageRequest {
-
+public class ImageResponse {
+    private final Long id;
     private final String name;
     private final String byteArray;
     private final Boolean isPrivate;
-    private final Long albumId;
 
-    public ImageRequest(String name, String byteArray, Boolean isPrivate, Long albumId) {
+    public ImageResponse(Long id, String name, String byteArray, Boolean isPrivate) {
+        this.id = id;
         this.name = name;
         this.byteArray = byteArray;
         this.isPrivate = isPrivate;
-        this.albumId = albumId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -24,9 +27,5 @@ public class ImageRequest {
 
     public Boolean getPrivate() {
         return isPrivate;
-    }
-
-    public Long getAlbumId() {
-        return albumId;
     }
 }
