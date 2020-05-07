@@ -1,5 +1,6 @@
 package by.bsuir.OnlineGallery.model;
 
+import by.bsuir.OnlineGallery.model.audit.UserDateAudit;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "album")
-public class Album {
+public class Album extends UserDateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
