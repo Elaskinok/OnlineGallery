@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,7 +38,7 @@ public class AlbumService {
 
         List<PagedResponse<Album>> pagedResponseList = new ArrayList<>();
 
-        List<Album> albums = albumRepository.findByCreatedBy(user.getId());
+        List<Album> albums = albumRepository.findAlbumById(user.getId());
 
         for (Album album : albums) {
             List<Image> images = imageRepository.findAllByAlbum(album);
@@ -50,18 +49,6 @@ public class AlbumService {
     }
 
     public Album createAlbum(AlbumRequest albumRequest) {
-        Album album = new Album();
-        album.setName(albumRequest.getName());
-
-        if (albumRequest.getImages() == null) {
-            album.setImages(Collections.emptyList());
-        } else {
-            album.setImages(albumRequest.getImages());
-        }
-
-        album.setDescription(albumRequest.getDescription());
-        albumRepository.save(album);
-
-        return album;
+        return null;
     }
 }

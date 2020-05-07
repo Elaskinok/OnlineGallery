@@ -16,11 +16,11 @@ public class AlbumRequest {
     private final String description;
 
     @Valid
-    private final List<Image> images;
+    private final List<ImageRequest> images;
 
     public AlbumRequest(@NotBlank @Size(max = 50) String name,
                         @Size(max = 255) String description,
-                        @Valid List<Image> images) {
+                        @Valid List<ImageRequest> images) {
 
         this.name = name;
         this.description = description;
@@ -35,7 +35,7 @@ public class AlbumRequest {
         return description;
     }
 
-    public List<Image> getImages() {
+    public List<ImageRequest> getImages() {
         return images;
     }
 }
