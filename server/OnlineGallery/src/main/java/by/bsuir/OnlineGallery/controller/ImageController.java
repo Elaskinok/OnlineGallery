@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.Collections;
 
 @RestController
-@RequestMapping(path = "/api/images")
+@RequestMapping("/api/images")
 public class ImageController {
     private final ImageService imageService;
 
@@ -28,12 +28,6 @@ public class ImageController {
     @PostMapping
     @RequestMapping
     public ResponseEntity<Image> addImage(@Valid @RequestBody ImageRequest imageRequest) {
-        //        TODO default album id
-        Album album = new Album();
-        album.setName("default");
-        album.setDescription("default");
-        album.setImages(Collections.emptyList());
-
         Image image = imageService.addImage(imageRequest);
         System.out.println(image);
 //        TODO final return value

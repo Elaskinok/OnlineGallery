@@ -38,4 +38,5 @@ public class AlbumRequest {
     public List<ImageRequest> getImages() {
         return images;
     }
+
 }

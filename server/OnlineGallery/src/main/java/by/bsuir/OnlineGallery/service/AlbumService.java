@@ -51,4 +51,8 @@ public class AlbumService {
     public Album createAlbum(AlbumRequest albumRequest) {
         return null;
     }
+
+    public boolean existsByAlbumName(String name) {
+        return albumRepository.existsByName(name);
+    }
 }

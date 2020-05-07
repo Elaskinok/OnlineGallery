@@ -11,5 +11,9 @@ import java.util.Optional;
 public interface AlbumRepository extends JpaRepository<Album, Long> {
     List<Album> findAlbumById(Long albumId);
 
+    boolean existsByName(String albumName);
+
     Optional<Album> findById(Long albumId);
+
+    boolean existsById(Long albumId);
 }

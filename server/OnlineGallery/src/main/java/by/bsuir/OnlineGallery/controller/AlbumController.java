@@ -8,6 +8,7 @@ import by.bsuir.OnlineGallery.sercurity.CurrentUser;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import by.bsuir.OnlineGallery.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +36,14 @@ public class AlbumController {
         return albumService.findAlbumsCreatedBy(userPrincipal.getUsername());
     }
 
-    @PostMapping
+    @PostMapping("/create-new-album")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createAlbum(@Valid @RequestBody AlbumRequest albumRequest) {
+        if (albumService.existsByAlbumName(albumRequest.getName())) {
+            return new ResponseEntity(new ApiResponse(false, "Album is already existed!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         Album savedAlbum = albumService.createAlbum(albumRequest);
 
         URI location = ServletUriComponentsBuilder
