@@ -1,5 +1,6 @@
 package by.bsuir.OnlineGallery.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,8 +26,9 @@ public class Image {
     @Size(max = 50)
     private String name;
 
-    @NotNull
-    private byte[] byteArray;
+    @Column(columnDefinition = "MEDIUMBLOB")
+    @NotBlank
+    private String byteArray;
 
     private boolean isPrivate;
 
@@ -50,7 +52,7 @@ public class Image {
         this.name = name;
     }
 
-    public byte[] getByteArray() {
+    public String getByteArray() {
         return byteArray;
     }
 
@@ -62,7 +64,7 @@ public class Image {
         isPrivate = aPrivate;
     }
 
-    public void setByteArray(byte[] byteArray) {
+    public void setByteArray(String byteArray) {
         this.byteArray = byteArray;
     }
 
@@ -81,9 +83,10 @@ public class Image {
 
         Image image = (Image) o;
 
+        if (isPrivate != image.isPrivate) return false;
         if (!Objects.equals(id, image.id)) return false;
         if (!Objects.equals(name, image.name)) return false;
-        if (!Arrays.equals(byteArray, image.byteArray)) return false;
+        if (!Objects.equals(byteArray, image.byteArray)) return false;
         return Objects.equals(album, image.album);
     }
 
@@ -91,9 +94,9 @@ public class Image {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(byteArray);
+        result = 31 * result + (byteArray != null ? byteArray.hashCode() : 0);
+        result = 31 * result + (isPrivate ? 1 : 0);
         result = 31 * result + (album != null ? album.hashCode() : 0);
         return result;
     }
-
 }

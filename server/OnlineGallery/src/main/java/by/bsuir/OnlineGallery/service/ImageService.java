@@ -12,7 +12,9 @@ import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,19 +38,42 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
-    public UserImageResponse getImageById(UserPrincipal userPrincipal, Long imageId) {
+    public UserImageResponse findImageById(UserPrincipal userPrincipal, Long imageId) {
         Image image = imageRepository.findById(imageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Image", "imageId", imageId));
+
+        String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
         ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
-                Arrays.toString(image.getByteArray()), image.isPrivate());
+                decodedImage, image.isPrivate());
 
         return new UserImageResponse(userPrincipal.getId(), imageResponse);
+    }
+
+    public List<UserImageResponse> findAllUserImages(UserPrincipal userPrincipal) {
+        List<Album> albums = albumRepository.findAlbumById(userPrincipal.getId());
+        List<UserImageResponse> userImageResponses = new ArrayList<>();
+
+        for (Album album : albums) {
+            List<Image> images = album.getImages();
+
+//            TODO needs to be decoded
+            for (Image image : images) {
+                String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
+                ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
+                        decodedImage, image.isPrivate());
+
+                userImageResponses.add(new UserImageResponse(userPrincipal.getId(), imageResponse));
+            }
+        }
+
+        return userImageResponses;
     }
 
     private Image toImageModel(ImageRequest imageRequest) {
         Image image = new Image();
 
-        image.setByteArray(imageRequest.getByteArray().getBytes());
+        String encoded = Base64.getEncoder().encodeToString(imageRequest.getByteArray().getBytes());
+        image.setByteArray(encoded);
         image.setName(imageRequest.getName());
         image.setPrivate(imageRequest.getPrivate());
 

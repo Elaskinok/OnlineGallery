@@ -3,7 +3,6 @@ package by.bsuir.OnlineGallery.controller;
 import by.bsuir.OnlineGallery.model.Image;
 import by.bsuir.OnlineGallery.payload.ApiResponse;
 import by.bsuir.OnlineGallery.payload.ImageRequest;
-import by.bsuir.OnlineGallery.payload.ImageResponse;
 import by.bsuir.OnlineGallery.payload.UserImageResponse;
 import by.bsuir.OnlineGallery.sercurity.CurrentUser;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
@@ -21,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/images")
@@ -32,17 +32,17 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @GetMapping("/{imageId}")
+    @GetMapping("/image/{imageId}")
     @PreAuthorize("hasRole('USER')")
-    public UserImageResponse getImageById(@CurrentUser UserPrincipal userPrincipal,
+    public UserImageResponse findImageById(@CurrentUser UserPrincipal userPrincipal,
                                           @PathVariable Long imageId) {
-        UserImageResponse userImageResponse = imageService.getImageById(userPrincipal, imageId);
+        return imageService.findImageById(userPrincipal, imageId);
+    }
 
-//        URI location = ServletUriComponentsBuilder
-//                .fromCurrentRequest().path("/{imageId}")
-//                .buildAndExpand(userImageResponse.getImageResponse().getId()).toUri();
-
-        return userImageResponse;
+    @GetMapping("/all-user-images")
+    @PreAuthorize("hasRole('USER')")
+    public List<UserImageResponse> findAllUserImages(@CurrentUser UserPrincipal userPrincipal) {
+        return imageService.findAllUserImages(userPrincipal);
     }
 
     @PostMapping("/add-new-image")

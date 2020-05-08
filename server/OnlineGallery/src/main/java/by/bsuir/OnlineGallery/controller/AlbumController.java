@@ -31,8 +31,9 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
-    @GetMapping
-    public PagedResponse<?> getAlbums(@CurrentUser UserPrincipal userPrincipal) {
+    @GetMapping("/all-user-albums")
+    @PreAuthorize("hasRole('USER')")
+    public PagedResponse<?> findUserAlbums(@CurrentUser UserPrincipal userPrincipal) {
         return albumService.findAlbumsCreatedBy(userPrincipal.getUsername());
     }
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +42,6 @@ public class AlbumService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
         List<Album> albums = albumRepository.findAlbumById(user.getId());
-
         List<AlbumResponse> albumResponses = toAlbumResponse(albums);
         return new PagedResponse<>(albumResponses, 1, albumResponses.size(), 1, true);
     }
@@ -73,8 +73,9 @@ public class AlbumService {
             List<ImageResponse> imageResponses = new ArrayList<>();
             for (Image image : images) {
 //                TODO: make a byte-string conversion
-                ImageResponse imageResponse = new ImageResponse(image.getId(),
-                        image.getName(), Arrays.toString(image.getByteArray()), image.isPrivate());
+                String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
+                ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
+                        decodedImage, image.isPrivate());
                 imageResponses.add(imageResponse);
             }
             albumResponses.add(new AlbumResponse(album.getId(), album.getName(), imageResponses, album.getCreatedBy()));
