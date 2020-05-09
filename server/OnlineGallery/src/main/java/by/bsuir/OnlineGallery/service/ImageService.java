@@ -90,15 +90,15 @@ public class ImageService {
                 .orElseThrow(() -> new ResourceNotFoundException("Image", "imageId", imageId));
 
         if (!image.getAlbum().getCreatedBy().equals(userPrincipal.getId())) {
-            throw new BadRequestException("This user has no permissions");
+            throw new BadRequestException("This user has no permission to delete the image");
         }
 
         imageRepository.deleteImageById(imageId);
 
         if (imageRepository.existsImageById(imageId)) {
             return null;
-        } else {
-            return image;
         }
+
+        return image;
     }
 }

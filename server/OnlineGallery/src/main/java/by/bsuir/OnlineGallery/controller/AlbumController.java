@@ -7,12 +7,13 @@ import by.bsuir.OnlineGallery.payload.PagedResponse;
 import by.bsuir.OnlineGallery.sercurity.CurrentUser;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import by.bsuir.OnlineGallery.service.AlbumService;
-import by.bsuir.OnlineGallery.service.ApplicationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,5 +62,27 @@ public class AlbumController {
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Album has been created successfully"));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/delete-album/{albumId}")
+    public ResponseEntity<?> deleteAlbumById(@CurrentUser UserPrincipal userPrincipal,
+                                          @PathVariable Long albumId) {
+        Album album = albumService.deleteUserAlbumById(userPrincipal, albumId);
+
+        if (album == null) {
+            return new ResponseEntity<>(
+                    new ApiResponse(false,
+                    "No possibility to delete the album"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{albumId}")
+                .buildAndExpand(album.getId())
+                .toUri();
+
+        return ResponseEntity.created(location)
+                .body(new ApiResponse(true, "Album has been deleted successfully"));
     }
 }

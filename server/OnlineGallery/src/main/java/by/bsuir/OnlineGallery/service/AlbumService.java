@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -176,4 +177,21 @@ public class AlbumService {
         return albumResponses;
     }
 
+    @Transactional
+    public Album deleteUserAlbumById(UserPrincipal userPrincipal, Long albumId) {
+        Album album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", albumId));
+
+        if (!userPrincipal.getId().equals(album.getCreatedBy())) {
+            throw new BadRequestException("This user has no permission to delete the album");
+        }
+
+        albumRepository.deleteAlbumById(albumId);
+
+        if (albumRepository.existsById(albumId)) {
+            return null;
+        }
+
+        return album;
+    }
 }

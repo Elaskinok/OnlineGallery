@@ -15,6 +15,8 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
 
     Page<Album> findAlbumByCreatedBy(Long userId, Pageable pageable);
 
+    void deleteAlbumById(Long id);
+
     boolean existsByName(String albumName);
 
     Optional<Album> findById(Long albumId);
