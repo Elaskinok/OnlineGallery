@@ -89,7 +89,7 @@ public class AlbumService {
     private ImageResponse toImageResponse(Image image) {
         String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
         return new ImageResponse(image.getId(), image.getName(),
-                decodedImage, image.isPrivate());
+                image.isPrivate(), decodedImage);
     }
 
     private Album toAlbumModel(AlbumRequest albumRequest) {
@@ -133,15 +133,19 @@ public class AlbumService {
                 List<Image> images = imageRepository.findAllByAlbum(album);
 
                 List<ImageResponse> imageResponses = new ArrayList<>();
+
                 for (Image image : images) {
                     ImageResponse imageResponse = toImageResponse(image);
                     imageResponses.add(imageResponse);
                 }
                 albumResponses.add(
-                        new AlbumResponse(album.getId(),
+                        new AlbumResponse(
+                                album.getId(),
                                 album.getName(),
-                                imageResponses,
-                                album.getCreatedBy())
+                                album.getCreatedBy(),
+                                album.isPrivate(),
+                                imageResponses
+                        )
                 );
             }
         } else {
@@ -150,6 +154,7 @@ public class AlbumService {
 
                 List<Image> images = imageRepository.findAllByAlbum(album);
                 List<ImageResponse> imageResponses = new ArrayList<>();
+
                 for (Image image : images) {
                     if (image.isPrivate()) continue;
 
@@ -157,10 +162,13 @@ public class AlbumService {
                     imageResponses.add(imageResponse);
                 }
                 albumResponses.add(
-                        new AlbumResponse(album.getId(),
+                        new AlbumResponse(
+                                album.getId(),
                                 album.getName(),
-                                imageResponses,
-                                album.getCreatedBy())
+                                album.getCreatedBy(),
+                                album.isPrivate(),
+                                imageResponses
+                        )
                 );
             }
         }

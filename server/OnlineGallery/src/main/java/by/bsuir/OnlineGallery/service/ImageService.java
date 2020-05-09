@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +43,7 @@ public class ImageService {
 
         String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
         ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
-                decodedImage, image.isPrivate());
+                image.isPrivate(), decodedImage);
 
         return new UserImageResponse(userPrincipal.getId(), imageResponse);
     }
@@ -56,11 +55,10 @@ public class ImageService {
         for (Album album : albums) {
             List<Image> images = album.getImages();
 
-//            TODO needs to be decoded
             for (Image image : images) {
                 String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
                 ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
-                        decodedImage, image.isPrivate());
+                        image.isPrivate(), decodedImage);
 
                 userImageResponses.add(new UserImageResponse(userPrincipal.getId(), imageResponse));
             }

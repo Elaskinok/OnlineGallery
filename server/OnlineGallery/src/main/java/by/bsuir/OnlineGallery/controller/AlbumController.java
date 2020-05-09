@@ -41,7 +41,7 @@ public class AlbumController {
     public PagedResponse<?> findUserAlbums(@CurrentUser UserPrincipal userPrincipal,
                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        
+
         return albumService.findAlbumsByCreatedBy(userPrincipal, page, size);
     }
 

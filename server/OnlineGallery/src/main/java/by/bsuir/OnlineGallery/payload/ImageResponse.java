@@ -3,14 +3,18 @@ package by.bsuir.OnlineGallery.payload;
 public class ImageResponse {
     private final Long id;
     private final String name;
-    private final String byteArray;
     private final Boolean isPrivate;
+    private final String byteArray;
 
-    public ImageResponse(Long id, String name, String byteArray, Boolean isPrivate) {
+    public ImageResponse(Long id,
+                         String name,
+                         Boolean isPrivate,
+                         String byteArray) {
+
         this.id = id;
         this.name = name;
-        this.byteArray = byteArray;
         this.isPrivate = isPrivate;
+        this.byteArray = byteArray;
     }
 
     public Long getId() {
