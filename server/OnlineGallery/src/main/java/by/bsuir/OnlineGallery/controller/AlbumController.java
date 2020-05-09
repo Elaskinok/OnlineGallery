@@ -2,6 +2,7 @@ package by.bsuir.OnlineGallery.controller;
 
 import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.payload.AlbumRequest;
+import by.bsuir.OnlineGallery.payload.AlbumResponse;
 import by.bsuir.OnlineGallery.payload.ApiResponse;
 import by.bsuir.OnlineGallery.payload.PagedResponse;
 import by.bsuir.OnlineGallery.payload.UserAlbumResponse;
@@ -48,9 +49,9 @@ public class AlbumController {
 
     @GetMapping("/all-user-albums")
     @PreAuthorize("hasRole('USER')")
-    public PagedResponse<?> findUserAlbums(@CurrentUser UserPrincipal userPrincipal,
-                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                           @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
+    public PagedResponse<AlbumResponse> findUserAlbums(@CurrentUser UserPrincipal userPrincipal,
+                                                       @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                                       @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
 
         return albumService.findAlbumsByCreatedBy(userPrincipal, page, size);
     }
@@ -76,13 +77,13 @@ public class AlbumController {
     @DeleteMapping("/delete-album/{albumId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteAlbumById(@CurrentUser UserPrincipal userPrincipal,
-                                          @PathVariable Long albumId) {
+                                             @PathVariable Long albumId) {
         Album album = albumService.deleteUserAlbumById(userPrincipal, albumId);
 
         if (album == null) {
             return new ResponseEntity<>(
                     new ApiResponse(false,
-                    "No possibility to delete the album"),
+                            "No possibility to delete the album"),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -94,4 +95,5 @@ public class AlbumController {
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Album has been deleted successfully"));
     }
+
 }

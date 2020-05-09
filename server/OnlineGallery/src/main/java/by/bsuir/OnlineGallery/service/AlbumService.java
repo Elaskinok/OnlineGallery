@@ -6,6 +6,7 @@ import by.bsuir.OnlineGallery.exception.ResourceNotFoundException;
 import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.model.Image;
 import by.bsuir.OnlineGallery.model.User;
+import by.bsuir.OnlineGallery.payload.AlbumInfoResponse;
 import by.bsuir.OnlineGallery.payload.AlbumRequest;
 import by.bsuir.OnlineGallery.payload.AlbumResponse;
 import by.bsuir.OnlineGallery.payload.ImageResponse;
@@ -27,6 +28,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static by.bsuir.OnlineGallery.service.ApplicationConstants.MAX_PAGE_SIZE;
 
@@ -52,6 +54,44 @@ public class AlbumService {
 
     public boolean existsByAlbumName(String name) {
         return albumRepository.existsByName(name);
+    }
+
+    public List<AlbumInfoResponse> findAlbumsByUsername(UserPrincipal userPrincipal, String username) {
+        Long userId = getUserIdIfExists(username);
+        boolean privateFilter = true;
+
+        if (userPrincipal != null) {
+            if (Objects.equals(userPrincipal.getId(), userId)) {
+                privateFilter = false;
+            }
+        }
+
+        List<Album> albums = albumRepository.findAlbumByCreatedBy(userId);
+        List<AlbumInfoResponse> albumInfoResponses = new ArrayList<>();
+        for (Album album : albums) {
+            if (album.isPrivate() && privateFilter) continue;
+
+            ImageResponse imageResponse = null;
+            if (album.getImages().size() > 0) {
+                Optional<Image> firstImage;
+
+                if (privateFilter) {
+                    firstImage = album.getImages().stream()
+                            .filter(im -> !im.isPrivate())
+                            .findFirst();
+                } else {
+                    firstImage = album.getImages().stream().findFirst();
+                }
+
+                if (firstImage.isPresent()) {
+                    imageResponse = toImageResponse(firstImage.get());
+                }
+            }
+            albumInfoResponses.add(new AlbumInfoResponse(album.getId(), album.getName(), album.getDescription(),
+                    album.isPrivate(), imageResponse));
+        }
+
+        return albumInfoResponses;
     }
 
     public PagedResponse<AlbumResponse> findAlbumsByCreatedBy(UserPrincipal userPrincipal, int pageNumber, int size) {
@@ -199,4 +239,5 @@ public class AlbumService {
 
         return albumResponse;
     }
+
 }

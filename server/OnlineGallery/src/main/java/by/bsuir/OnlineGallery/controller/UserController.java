@@ -2,6 +2,7 @@ package by.bsuir.OnlineGallery.controller;
 
 import by.bsuir.OnlineGallery.exception.ResourceNotFoundException;
 import by.bsuir.OnlineGallery.model.User;
+import by.bsuir.OnlineGallery.payload.AlbumInfoResponse;
 import by.bsuir.OnlineGallery.payload.AlbumResponse;
 import by.bsuir.OnlineGallery.payload.ImageResponse;
 import by.bsuir.OnlineGallery.payload.PagedResponse;
@@ -15,6 +16,8 @@ import by.bsuir.OnlineGallery.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static by.bsuir.OnlineGallery.service.ApplicationConstants.*;
 
@@ -32,6 +35,13 @@ public class UserController {
         this.userRepository = userRepository;
         this.albumService = albumService;
         this.imageService = imageService;
+    }
+
+    @GetMapping("/user/{username}/profile")
+    public List<AlbumInfoResponse> findUserAlbumsByUsername(@CurrentUser UserPrincipal userPrincipal,
+                                                            @PathVariable(value = "username") String username) {
+
+        return albumService.findAlbumsByUsername(userPrincipal, username);
     }
 
     @GetMapping("/user/me")
