@@ -1,6 +1,7 @@
 package by.bsuir.OnlineGallery.service;
 
 import by.bsuir.OnlineGallery.exception.BadRequestException;
+import by.bsuir.OnlineGallery.exception.PermissionDeniedException;
 import by.bsuir.OnlineGallery.exception.ResourceNotFoundException;
 import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.model.Image;
@@ -87,7 +88,8 @@ public class ImageService {
                 .orElseThrow(() -> new ResourceNotFoundException("Image", "imageId", imageId));
 
         if (!image.getAlbum().getCreatedBy().equals(userPrincipal.getId())) {
-            throw new BadRequestException("This user has no permission to delete the image");
+            throw new PermissionDeniedException(userPrincipal.getUsername(), "Image",
+                    "This user has no permission to delete the image");
         }
 
         imageRepository.deleteImageById(imageId);
