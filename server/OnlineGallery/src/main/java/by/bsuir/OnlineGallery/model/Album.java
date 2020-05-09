@@ -36,10 +36,8 @@ public class Album extends UserDateAudit {
     @OneToMany(
             mappedBy = "album",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
             orphanRemoval = true
     )
-    @Fetch(FetchMode.SELECT)
     private List<Image> images;
 
     public boolean isPrivate() {

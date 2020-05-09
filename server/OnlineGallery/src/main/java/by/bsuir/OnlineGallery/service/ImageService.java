@@ -1,5 +1,6 @@
 package by.bsuir.OnlineGallery.service;
 
+import by.bsuir.OnlineGallery.exception.BadRequestException;
 import by.bsuir.OnlineGallery.exception.ResourceNotFoundException;
 import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.model.Image;
@@ -11,6 +12,7 @@ import by.bsuir.OnlineGallery.repository.ImageRepository;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -82,4 +84,21 @@ public class ImageService {
         return image;
     }
 
+    @Transactional
+    public Image deleteImageById(UserPrincipal userPrincipal, Long imageId) {
+        Image image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new ResourceNotFoundException("Image", "imageId", imageId));
+
+        if (!image.getAlbum().getCreatedBy().equals(userPrincipal.getId())) {
+            throw new BadRequestException("This user has no permissions");
+        }
+
+        imageRepository.deleteImageById(imageId);
+
+        if (imageRepository.existsImageById(imageId)) {
+            return null;
+        } else {
+            return image;
+        }
+    }
 }
