@@ -9,8 +9,8 @@ import by.bsuir.OnlineGallery.payload.AlbumRequest;
 import by.bsuir.OnlineGallery.payload.AlbumResponse;
 import by.bsuir.OnlineGallery.payload.ImageResponse;
 import by.bsuir.OnlineGallery.payload.PagedResponse;
+import by.bsuir.OnlineGallery.payload.UserAlbumResponse;
 import by.bsuir.OnlineGallery.repository.AlbumRepository;
-import by.bsuir.OnlineGallery.repository.ImageRepository;
 import by.bsuir.OnlineGallery.repository.UserRepository;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static by.bsuir.OnlineGallery.service.ApplicationConstants.MAX_PAGE_SIZE;
 
@@ -33,16 +34,13 @@ public class AlbumService {
     private static String SORT_BY_CREATED_AT = "createdAt";
 
     private final AlbumRepository albumRepository;
-    private final ImageRepository imageRepository;
     private final UserRepository userRepository;
 
     @Autowired
     public AlbumService(AlbumRepository albumRepository,
-                        ImageRepository imageRepository,
                         UserRepository userRepository) {
 
         this.albumRepository = albumRepository;
-        this.imageRepository = imageRepository;
         this.userRepository = userRepository;
     }
 
@@ -73,6 +71,37 @@ public class AlbumService {
         Page<Album> albumPage = getAlbumPageByCreatedAt(pageNumber, size, userId);
 
         return getAlbumResponsePagedResponse(albumPage, true);
+    }
+
+    @Transactional
+    public Album deleteUserAlbumById(UserPrincipal userPrincipal, Long albumId) {
+        Album album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", albumId));
+
+        if (!userPrincipal.getId().equals(album.getCreatedBy())) {
+            throw new BadRequestException("This user has no permission to delete the album");
+        }
+
+        albumRepository.deleteAlbumById(albumId);
+
+        if (albumRepository.existsById(albumId)) {
+            return null;
+        }
+
+        return album;
+    }
+
+    public UserAlbumResponse findUserAlbumById(UserPrincipal userPrincipal, Long albumId) {
+        Album album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", albumId));
+
+        if (!Objects.equals(album.getCreatedBy(), userPrincipal.getId())) {
+            throw new BadRequestException("This user has no permission for the Album");
+        }
+
+        AlbumResponse albumResponse = toAlbumResponse(album, false);
+
+        return new UserAlbumResponse(userPrincipal.getId(), userPrincipal.getUsername(), albumResponse);
     }
 
     private Page<Album> getAlbumPageByCreatedAt(int pageNumber, int size, long userId) {
@@ -113,6 +142,16 @@ public class AlbumService {
         }
     }
 
+    private List<AlbumResponse> toAlbumResponseList(List<Album> albums, boolean privateFilter) {
+        List<AlbumResponse> albumResponses = new ArrayList<>();
+        for (Album album : albums) {
+            AlbumResponse albumResponse = toAlbumResponse(album, privateFilter);
+            albumResponses.add(albumResponse);
+        }
+
+        return albumResponses;
+    }
+
     private PagedResponse<AlbumResponse> getAlbumResponsePagedResponse(Page<Album> albumPage, boolean privateFilter) {
         List<AlbumResponse> albumResponses;
 
@@ -120,78 +159,41 @@ public class AlbumService {
             albumResponses = Collections.emptyList();
         } else {
             List<Album> albums = albumPage.getContent();
-            albumResponses = toAlbumResponse(albums, privateFilter);
+            albumResponses = toAlbumResponseList(albums, privateFilter);
         }
 
         return new PagedResponse<>(albumResponses, albumPage.getNumber(), albumPage.getSize(),
                 albumPage.getTotalElements(), albumPage.getTotalPages(), albumPage.isLast());
     }
 
-    private List<AlbumResponse> toAlbumResponse(List<Album> albums, boolean privateFilter) {
-        List<AlbumResponse> albumResponses = new ArrayList<>();
+    private AlbumResponse toAlbumResponse(Album album, boolean privateFilter) {
+        AlbumResponse albumResponse;
+
         if (!privateFilter) {
-            for (Album album : albums) {
-                List<Image> images = imageRepository.findAllByAlbum(album);
+            List<Image> images = album.getImages();
 
-                List<ImageResponse> imageResponses = new ArrayList<>();
-
-                for (Image image : images) {
-                    ImageResponse imageResponse = toImageResponse(image);
-                    imageResponses.add(imageResponse);
-                }
-                albumResponses.add(
-                        new AlbumResponse(
-                                album.getId(),
-                                album.getName(),
-                                album.getCreatedBy(),
-                                album.isPrivate(),
-                                imageResponses
-                        )
-                );
+            List<ImageResponse> imageResponses = new ArrayList<>();
+            for (Image image : images) {
+                ImageResponse imageResponse = toImageResponse(image);
+                imageResponses.add(imageResponse);
             }
+
+            albumResponse = new AlbumResponse(album.getId(), album.getName(),
+                    album.getCreatedBy(), album.isPrivate(), imageResponses);
         } else {
-            for (Album album : albums) {
-                if (album.isPrivate()) continue;
+            List<Image> images = album.getImages();
+            List<ImageResponse> imageResponses = new ArrayList<>();
 
-                List<Image> images = imageRepository.findAllByAlbum(album);
-                List<ImageResponse> imageResponses = new ArrayList<>();
+            for (Image image : images) {
+                if (image.isPrivate()) continue;
 
-                for (Image image : images) {
-                    if (image.isPrivate()) continue;
-
-                    ImageResponse imageResponse = toImageResponse(image);
-                    imageResponses.add(imageResponse);
-                }
-                albumResponses.add(
-                        new AlbumResponse(
-                                album.getId(),
-                                album.getName(),
-                                album.getCreatedBy(),
-                                album.isPrivate(),
-                                imageResponses
-                        )
-                );
+                ImageResponse imageResponse = toImageResponse(image);
+                imageResponses.add(imageResponse);
             }
+            albumResponse = new AlbumResponse(album.getId(), album.getName(),
+                    album.getCreatedBy(), album.isPrivate(), imageResponses);
         }
 
-        return albumResponses;
-    }
-
-    @Transactional
-    public Album deleteUserAlbumById(UserPrincipal userPrincipal, Long albumId) {
-        Album album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", albumId));
-
-        if (!userPrincipal.getId().equals(album.getCreatedBy())) {
-            throw new BadRequestException("This user has no permission to delete the album");
-        }
-
-        albumRepository.deleteAlbumById(albumId);
-
-        if (albumRepository.existsById(albumId)) {
-            return null;
-        }
-
-        return album;
+        return albumResponse;
     }
 }

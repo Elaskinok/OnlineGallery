@@ -30,10 +30,6 @@ public class ImageService {
         this.albumRepository = albumRepository;
     }
 
-    public List<Image> addImages(List<ImageRequest> imageRequests, Album album) {
-        return Collections.emptyList();
-    }
-
     public Image addImage(ImageRequest imageRequest) {
         Image image = toImageModel(imageRequest);
         return imageRepository.save(image);
@@ -47,7 +43,7 @@ public class ImageService {
         ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
                 image.isPrivate(), decodedImage);
 
-        return new UserImageResponse(userPrincipal.getId(), imageResponse);
+        return new UserImageResponse(userPrincipal.getId(), userPrincipal.getUsername(), imageResponse);
     }
 
     public List<UserImageResponse> findAllUserImages(UserPrincipal userPrincipal) {
@@ -62,7 +58,8 @@ public class ImageService {
                 ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
                         image.isPrivate(), decodedImage);
 
-                userImageResponses.add(new UserImageResponse(userPrincipal.getId(), imageResponse));
+                userImageResponses.add(new UserImageResponse(userPrincipal.getId(),
+                        userPrincipal.getUsername(), imageResponse));
             }
         }
 

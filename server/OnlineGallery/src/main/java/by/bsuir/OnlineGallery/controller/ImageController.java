@@ -1,7 +1,5 @@
 package by.bsuir.OnlineGallery.controller;
 
-import by.bsuir.OnlineGallery.exception.BadRequestException;
-import by.bsuir.OnlineGallery.exception.ResourceNotFoundException;
 import by.bsuir.OnlineGallery.model.Image;
 import by.bsuir.OnlineGallery.payload.ApiResponse;
 import by.bsuir.OnlineGallery.payload.ImageRequest;
@@ -25,7 +23,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/images")

@@ -4,6 +4,7 @@ import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.payload.AlbumRequest;
 import by.bsuir.OnlineGallery.payload.ApiResponse;
 import by.bsuir.OnlineGallery.payload.PagedResponse;
+import by.bsuir.OnlineGallery.payload.UserAlbumResponse;
 import by.bsuir.OnlineGallery.sercurity.CurrentUser;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import by.bsuir.OnlineGallery.service.AlbumService;
@@ -37,6 +38,14 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
+    @GetMapping("/album/{albumId}")
+    @PreAuthorize("hasRole('USER')")
+    public UserAlbumResponse findUserAlbumById(@CurrentUser UserPrincipal userPrincipal,
+                                               @PathVariable Long albumId) {
+
+        return albumService.findUserAlbumById(userPrincipal, albumId);
+    }
+
     @GetMapping("/all-user-albums")
     @PreAuthorize("hasRole('USER')")
     public PagedResponse<?> findUserAlbums(@CurrentUser UserPrincipal userPrincipal,
@@ -64,8 +73,8 @@ public class AlbumController {
                 .body(new ApiResponse(true, "Album has been created successfully"));
     }
 
-    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete-album/{albumId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteAlbumById(@CurrentUser UserPrincipal userPrincipal,
                                           @PathVariable Long albumId) {
         Album album = albumService.deleteUserAlbumById(userPrincipal, albumId);
