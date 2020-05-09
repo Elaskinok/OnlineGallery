@@ -1,6 +1,7 @@
 package by.bsuir.OnlineGallery.payload;
 
 public class ImageResponse {
+
     private final Long id;
     private final String name;
     private final Boolean isPrivate;
@@ -25,11 +26,11 @@ public class ImageResponse {
         return name;
     }
 
-    public String getByteArray() {
-        return byteArray;
-    }
-
     public Boolean getPrivate() {
         return isPrivate;
+    }
+
+    public String getByteArray() {
+        return byteArray;
     }
 }

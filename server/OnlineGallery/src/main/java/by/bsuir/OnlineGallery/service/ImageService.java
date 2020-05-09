@@ -1,12 +1,12 @@
 package by.bsuir.OnlineGallery.service;
 
-import by.bsuir.OnlineGallery.exception.BadRequestException;
 import by.bsuir.OnlineGallery.exception.PermissionDeniedException;
 import by.bsuir.OnlineGallery.exception.ResourceNotFoundException;
 import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.model.Image;
 import by.bsuir.OnlineGallery.payload.ImageRequest;
 import by.bsuir.OnlineGallery.payload.ImageResponse;
+import by.bsuir.OnlineGallery.payload.PagedResponse;
 import by.bsuir.OnlineGallery.payload.UserImageResponse;
 import by.bsuir.OnlineGallery.repository.AlbumRepository;
 import by.bsuir.OnlineGallery.repository.ImageRepository;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -34,6 +33,11 @@ public class ImageService {
     public Image addImage(ImageRequest imageRequest) {
         Image image = toImageModel(imageRequest);
         return imageRepository.save(image);
+    }
+
+    public PagedResponse<ImageResponse> findImageByUsername(String username, int page, int size) {
+
+        return null;
     }
 
     public UserImageResponse findImageById(UserPrincipal userPrincipal, Long imageId) {
@@ -67,21 +71,6 @@ public class ImageService {
         return userImageResponses;
     }
 
-    private Image toImageModel(ImageRequest imageRequest) {
-        Image image = new Image();
-
-        String encoded = Base64.getEncoder().encodeToString(imageRequest.getByteArray().getBytes());
-        image.setByteArray(encoded);
-        image.setName(imageRequest.getName());
-        image.setPrivate(imageRequest.getPrivate());
-
-        Album album = albumRepository.findById(imageRequest.getAlbumId())
-                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", imageRequest.getAlbumId()));
-
-        image.setAlbum(album);
-        return image;
-    }
-
     @Transactional
     public Image deleteImageById(UserPrincipal userPrincipal, Long imageId) {
         Image image = imageRepository.findById(imageId)
@@ -98,6 +87,21 @@ public class ImageService {
             return null;
         }
 
+        return image;
+    }
+
+    private Image toImageModel(ImageRequest imageRequest) {
+        Image image = new Image();
+
+        String encoded = Base64.getEncoder().encodeToString(imageRequest.getByteArray().getBytes());
+        image.setByteArray(encoded);
+        image.setName(imageRequest.getName());
+        image.setPrivate(imageRequest.getPrivate());
+
+        Album album = albumRepository.findById(imageRequest.getAlbumId())
+                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", imageRequest.getAlbumId()));
+
+        image.setAlbum(album);
         return image;
     }
 }

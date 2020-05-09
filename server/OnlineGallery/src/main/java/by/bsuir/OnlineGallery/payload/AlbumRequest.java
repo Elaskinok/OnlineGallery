@@ -1,26 +1,18 @@
 package by.bsuir.OnlineGallery.payload;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 public class AlbumRequest {
-    @NotBlank
-    @Size(max = 50)
+
     private final String name;
-
-    @Size(max = 255)
     private final String description;
-
     private final Boolean isPrivate;
-
-    @Valid
     private final List<ImageRequest> images;
 
-    public AlbumRequest(@NotBlank @Size(max = 50) String name,
-                        @Size(max = 255) String description,
-                        Boolean isPrivate, @Valid List<ImageRequest> images) {
+    public AlbumRequest(String name,
+                        String description,
+                        Boolean isPrivate,
+                        List<ImageRequest> images) {
 
         this.name = name;
         this.description = description;

@@ -5,7 +5,10 @@ public class UserAlbumResponse {
     private final String username;
     private final AlbumResponse albumResponse;
 
-    public UserAlbumResponse(Long userId, String username, AlbumResponse albumResponse) {
+    public UserAlbumResponse(Long userId,
+                             String username,
+                             AlbumResponse albumResponse) {
+
         this.userId = userId;
         this.username = username;
         this.albumResponse = albumResponse;

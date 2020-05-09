@@ -7,7 +7,11 @@ public class ImageRequest {
     private final Boolean isPrivate;
     private final Long albumId;
 
-    public ImageRequest(String name, String byteArray, Boolean isPrivate, Long albumId) {
+    public ImageRequest(String name,
+                        String byteArray,
+                        Boolean isPrivate,
+                        Long albumId) {
+
         this.name = name;
         this.byteArray = byteArray;
         this.isPrivate = isPrivate;

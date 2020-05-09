@@ -3,6 +3,7 @@ package by.bsuir.OnlineGallery.payload;
 import java.util.List;
 
 public class AlbumResponse {
+
     private final Long albumId;
     private final String albumName;
     private final Long creatorId;

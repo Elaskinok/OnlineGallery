@@ -1,6 +1,7 @@
 package by.bsuir.OnlineGallery.payload;
 
 public class JwtAuthenticationResponse {
+
     private String accessToken;
     private String tokenType = "Bearer";
 

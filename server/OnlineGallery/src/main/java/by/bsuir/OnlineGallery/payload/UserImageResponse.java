@@ -18,4 +18,8 @@ public class UserImageResponse {
     public ImageResponse getImageResponse() {
         return imageResponse;
     }
+
+    public String getUsername() {
+        return username;
+    }
 }
