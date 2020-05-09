@@ -37,7 +37,7 @@ public class UserController {
         this.imageService = imageService;
     }
 
-    @GetMapping("/user/{username}/profile")
+    @GetMapping("/user/{username}/profile-content")
     public List<AlbumInfoResponse> findUserAlbumsByUsername(@CurrentUser UserPrincipal userPrincipal,
                                                             @PathVariable(value = "username") String username) {
 
@@ -78,7 +78,7 @@ public class UserController {
                                                                       @RequestParam(
                                                                               value = "size",
                                                                               defaultValue = DEFAULT_PAGE_SIZE) int size) {
-
+//      TODO: finish the method
         return imageService.findImageByUsername(username, page, size);
     }
 }

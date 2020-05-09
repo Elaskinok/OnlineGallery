@@ -3,6 +3,8 @@ package by.bsuir.OnlineGallery.controller;
 import by.bsuir.OnlineGallery.model.Image;
 import by.bsuir.OnlineGallery.payload.ApiResponse;
 import by.bsuir.OnlineGallery.payload.ImageRequest;
+import by.bsuir.OnlineGallery.payload.ImageResponse;
+import by.bsuir.OnlineGallery.payload.PagedResponse;
 import by.bsuir.OnlineGallery.payload.UserImageResponse;
 import by.bsuir.OnlineGallery.sercurity.CurrentUser;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
@@ -17,12 +19,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+import static by.bsuir.OnlineGallery.service.ApplicationConstants.DEFAULT_IMAGE_AMOUNT;
 
 @RestController
 @RequestMapping("/api/images")
@@ -32,6 +37,13 @@ public class ImageController {
     @Autowired
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
+    }
+
+    @GetMapping("/last-added")
+    public List<ImageResponse> findLatestPhoto(@RequestParam(value = "amount", defaultValue = DEFAULT_IMAGE_AMOUNT)
+                                                                Integer amount) {
+
+        return imageService.findLastAddedImages(amount);
     }
 
     @GetMapping("/image/{imageId}")

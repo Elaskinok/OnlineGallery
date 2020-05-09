@@ -17,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class ImageService {
@@ -36,8 +39,29 @@ public class ImageService {
     }
 
     public PagedResponse<ImageResponse> findImageByUsername(String username, int page, int size) {
-
+//      TODO: finish the method
         return null;
+    }
+
+    public List<ImageResponse> findLastAddedImages(Integer amount) {
+        List<Image> images = imageRepository.findAll();
+
+        List<Image> publicImages = images.stream()
+                .filter(v -> !v.isPrivate())
+                .collect(Collectors.toList());
+
+        Collections.shuffle(publicImages, new Random(11));
+
+        List<ImageResponse> imageResponses = publicImages.stream()
+                .map(this::toImageResponse)
+                .collect(Collectors.toList());
+
+        List<ImageResponse> toReturn = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            toReturn.add(imageResponses.get(i));
+        }
+
+        return toReturn;
     }
 
     public UserImageResponse findImageById(UserPrincipal userPrincipal, Long imageId) {
@@ -103,5 +127,11 @@ public class ImageService {
 
         image.setAlbum(album);
         return image;
+    }
+
+    private ImageResponse toImageResponse(Image image) {
+        String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
+        return new ImageResponse(image.getId(), image.getName(),
+                image.isPrivate(), decodedImage);
     }
 }
