@@ -7,6 +7,7 @@ import by.bsuir.OnlineGallery.payload.PagedResponse;
 import by.bsuir.OnlineGallery.sercurity.CurrentUser;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import by.bsuir.OnlineGallery.service.AlbumService;
+import by.bsuir.OnlineGallery.service.ApplicationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+
+import static by.bsuir.OnlineGallery.service.ApplicationConstants.DEFAULT_PAGE_NUMBER;
+import static by.bsuir.OnlineGallery.service.ApplicationConstants.DEFAULT_PAGE_SIZE;
 
 @RestController
 @RequestMapping("/api/albums")
@@ -33,8 +38,11 @@ public class AlbumController {
 
     @GetMapping("/all-user-albums")
     @PreAuthorize("hasRole('USER')")
-    public PagedResponse<?> findUserAlbums(@CurrentUser UserPrincipal userPrincipal) {
-        return albumService.findAlbumsCreatedBy(userPrincipal.getUsername());
+    public PagedResponse<?> findUserAlbums(@CurrentUser UserPrincipal userPrincipal,
+                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                           @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        
+        return albumService.findAlbumsByCreatedBy(userPrincipal, page, size);
     }
 
     @PostMapping("/create-new-album")
