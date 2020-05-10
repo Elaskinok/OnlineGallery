@@ -44,6 +44,22 @@ public class UserController {
         return albumService.findAlbumsByUsername(userPrincipal, username);
     }
 
+    @GetMapping("/user/{username}/album/{albumId}")
+    public List<ImageResponse> findUserAlbumContentById(@CurrentUser UserPrincipal userPrincipal,
+                                                        @PathVariable(value = "username") String username,
+                                                        @PathVariable(value = "albumId") Long albumId) {
+
+        List<ImageResponse> content;
+
+        if (userPrincipal == null) {
+            content = albumService.findUserAlbumContentById(new UserPrincipal(), username, albumId);
+        } else {
+            content = albumService.findUserAlbumContentById(userPrincipal, username, albumId);
+        }
+
+        return content;
+    }
+
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {

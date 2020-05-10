@@ -40,7 +40,7 @@ public class ImageController {
     }
 
     @GetMapping("/last-added")
-    public List<ImageResponse> findLatestPhoto(@RequestParam(value = "amount", defaultValue = DEFAULT_IMAGE_AMOUNT)
+    public List<UserImageResponse> findLatestPhoto(@RequestParam(value = "amount", defaultValue = DEFAULT_IMAGE_AMOUNT)
                                                                 Integer amount) {
 
         return imageService.findLastAddedImages(amount);

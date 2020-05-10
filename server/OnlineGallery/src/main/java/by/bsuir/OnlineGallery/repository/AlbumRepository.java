@@ -11,9 +11,12 @@ import java.util.Optional;
 
 @Repository
 public interface AlbumRepository extends JpaRepository<Album, Long> {
-    List<Album> findAlbumByCreatedBy(Long creatorId);
+//    List<Album> findAlbumByCreatedBy(Long creatorId);
 
-    List<Album> findAlbumById(Long userId);
+//    TODO: userId -> userAlbum ?
+    List<Album> findAlbumByCreatedBy(Long userId);
+
+    Optional<Album> findAlbumById(Long id);
 
     Page<Album> findAlbumByCreatedBy(Long userId, Pageable pageable);
 

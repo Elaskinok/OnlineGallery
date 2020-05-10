@@ -4,12 +4,14 @@ import by.bsuir.OnlineGallery.exception.PermissionDeniedException;
 import by.bsuir.OnlineGallery.exception.ResourceNotFoundException;
 import by.bsuir.OnlineGallery.model.Album;
 import by.bsuir.OnlineGallery.model.Image;
+import by.bsuir.OnlineGallery.model.User;
 import by.bsuir.OnlineGallery.payload.ImageRequest;
 import by.bsuir.OnlineGallery.payload.ImageResponse;
 import by.bsuir.OnlineGallery.payload.PagedResponse;
 import by.bsuir.OnlineGallery.payload.UserImageResponse;
 import by.bsuir.OnlineGallery.repository.AlbumRepository;
 import by.bsuir.OnlineGallery.repository.ImageRepository;
+import by.bsuir.OnlineGallery.repository.UserRepository;
 import by.bsuir.OnlineGallery.sercurity.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,16 @@ import java.util.stream.Collectors;
 public class ImageService {
     private final ImageRepository imageRepository;
     private final AlbumRepository albumRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ImageService(ImageRepository imageRepository, AlbumRepository albumRepository) {
+    public ImageService(ImageRepository imageRepository,
+                        AlbumRepository albumRepository,
+                        UserRepository userRepository) {
+
         this.imageRepository = imageRepository;
         this.albumRepository = albumRepository;
+        this.userRepository = userRepository;
     }
 
     public Image addImage(ImageRequest imageRequest) {
@@ -43,7 +50,7 @@ public class ImageService {
         return null;
     }
 
-    public List<ImageResponse> findLastAddedImages(Integer amount) {
+    public List<UserImageResponse> findLastAddedImages(Integer amount) {
         List<Image> images = imageRepository.findAll();
 
         List<Image> publicImages = images.stream()
@@ -52,16 +59,22 @@ public class ImageService {
 
         Collections.shuffle(publicImages, new Random(11));
 
-        List<ImageResponse> imageResponses = publicImages.stream()
-                .map(this::toImageResponse)
-                .collect(Collectors.toList());
-
-        List<ImageResponse> toReturn = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            toReturn.add(imageResponses.get(i));
+        List<Image> requiredImages = new ArrayList<>();
+        for (int i = 0; i < amount && i < publicImages.size(); i++) {
+            requiredImages.add(publicImages.get(i));
         }
 
-        return toReturn;
+        List<User> owners = findOwnersByImageList(requiredImages);
+        List<UserImageResponse> imageResponses = new ArrayList<>();
+        for (int i = 0; i < requiredImages.size(); i++) {
+            User owner = owners.get(i);
+            Image image = requiredImages.get(i);
+
+            UserImageResponse userImageResponse = toUserImageResponse(image, owner);
+            imageResponses.add(userImageResponse);
+        }
+
+        return imageResponses;
     }
 
     public UserImageResponse findImageById(UserPrincipal userPrincipal, Long imageId) {
@@ -69,14 +82,14 @@ public class ImageService {
                 .orElseThrow(() -> new ResourceNotFoundException("Image", "imageId", imageId));
 
         String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
-        ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
+        ImageResponse imageResponse = new ImageResponse(image.getId(), image.getAlbum().getId(), image.getName(),
                 image.isPrivate(), decodedImage);
 
         return new UserImageResponse(userPrincipal.getId(), userPrincipal.getUsername(), imageResponse);
     }
 
     public List<UserImageResponse> findAllUserImages(UserPrincipal userPrincipal) {
-        List<Album> albums = albumRepository.findAlbumById(userPrincipal.getId());
+        List<Album> albums = albumRepository.findAlbumByCreatedBy(userPrincipal.getId());
         List<UserImageResponse> userImageResponses = new ArrayList<>();
 
         for (Album album : albums) {
@@ -84,7 +97,7 @@ public class ImageService {
 
             for (Image image : images) {
                 String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
-                ImageResponse imageResponse = new ImageResponse(image.getId(), image.getName(),
+                ImageResponse imageResponse = new ImageResponse(image.getId(), image.getAlbum().getId(), image.getName(),
                         image.isPrivate(), decodedImage);
 
                 userImageResponses.add(new UserImageResponse(userPrincipal.getId(),
@@ -131,7 +144,31 @@ public class ImageService {
 
     private ImageResponse toImageResponse(Image image) {
         String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
-        return new ImageResponse(image.getId(), image.getName(),
+        return new ImageResponse(image.getId(), image.getAlbum().getId(), image.getName(),
                 image.isPrivate(), decodedImage);
+    }
+
+    private UserImageResponse toUserImageResponse(Image image, User user) {
+        ImageResponse imageResponse = toImageResponse(image);
+        return new UserImageResponse(user.getId(), user.getUsername(), imageResponse);
+    }
+
+    private List<User> findOwnersByImageList(List<Image> images) {
+        List<User> owners = new ArrayList<>();
+
+        for (Image image : images) {
+            long albumId = image.getAlbum().getId();
+
+            long userId = albumRepository.findAlbumById(albumId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", albumId))
+                    .getCreatedBy();
+
+            User owner = userRepository.findUserById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
+
+            owners.add(owner);
+        }
+
+        return owners;
     }
 }

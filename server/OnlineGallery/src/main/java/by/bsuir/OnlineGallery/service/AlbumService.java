@@ -161,7 +161,7 @@ public class AlbumService {
 
     private ImageResponse toImageResponse(Image image) {
         String decodedImage = new String(Base64.getDecoder().decode(image.getByteArray().getBytes()));
-        return new ImageResponse(image.getId(), image.getName(),
+        return new ImageResponse(image.getId(), image.getAlbum().getId(), image.getName(),
                 image.isPrivate(), decodedImage);
     }
 
@@ -240,4 +240,41 @@ public class AlbumService {
         return albumResponse;
     }
 
+    public List<ImageResponse> findUserAlbumContentById(UserPrincipal userPrincipal, String username, Long albumId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        boolean privateFilter = true;
+
+        if (userPrincipal != null) {
+            if (Objects.equals(user.getId(), userPrincipal.getId()) && userPrincipal.getUsername().equals(username)) {
+                privateFilter = false;
+            }
+        }
+
+        Album foundAlbum = albumRepository.findAlbumById(albumId)
+                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", albumId));
+
+        List<ImageResponse> imageResponses = new ArrayList<>();
+        if (privateFilter) {
+            if (foundAlbum.isPrivate()) {
+                throw new BadRequestException("The user has no permission for the album content");
+            }
+
+            List<Image> images = foundAlbum.getImages();
+            for (Image image : images) {
+                if (image.isPrivate()) continue;
+
+                ImageResponse imageResponse = toImageResponse(image);
+                imageResponses.add(imageResponse);
+            }
+        } else {
+            List<Image> images = foundAlbum.getImages();
+            for (Image image : images) {
+                ImageResponse imageResponse = toImageResponse(image);
+                imageResponses.add(imageResponse);
+            }
+        }
+
+        return imageResponses;
+    }
 }
