@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -276,5 +277,17 @@ public class AlbumService {
         }
 
         return imageResponses;
+    }
+
+    @Transactional
+    public boolean toggleAlbumPrivacyById(UserPrincipal userPrincipal, Long albumId) {
+        Album album = albumRepository.findAlbumById(albumId)
+                .orElseThrow(() -> new ResourceNotFoundException("Album", "albumId", albumId));
+
+        if (userPrincipal.getId().equals(album.getCreatedBy())) {
+            albumRepository.updateAlbumPrivacy(!(album.isPrivate()), album.getId());
+            return true;
+        }
+        return false;
     }
 }

@@ -12,7 +12,10 @@ import java.util.Optional;
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
     List<Image> findAllByAlbum(Album album);
+
     Optional<Image> findById(Long imageId);
+
     void deleteImageById(Long id);
+
     boolean existsImageById(Long id);
 }

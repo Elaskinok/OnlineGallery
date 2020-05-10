@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,6 +73,26 @@ public class AlbumController {
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Album has been created successfully"));
+    }
+
+    @PutMapping("/toggle-private/{albumId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> toggleAlbumPrivacy(@CurrentUser UserPrincipal userPrincipal,
+                                                @PathVariable(value = "albumId") Long albumId) {
+
+        boolean toggled = albumService.toggleAlbumPrivacyById(userPrincipal, albumId);
+
+        if(!toggled) {
+                return new ResponseEntity<>(new ApiResponse(false, "Can not toggle!"),
+                        HttpStatus.BAD_REQUEST);
+        }
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{albumId}")
+                .buildAndExpand(albumId).toUri();
+
+        return ResponseEntity.created(location)
+                .body(new ApiResponse(true, "Album privacy has been changed successfully"));
     }
 
     @DeleteMapping("/delete-album/{albumId}")

@@ -35,6 +35,7 @@ public class Album extends UserDateAudit {
 
     @OneToMany(
             mappedBy = "album",
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )

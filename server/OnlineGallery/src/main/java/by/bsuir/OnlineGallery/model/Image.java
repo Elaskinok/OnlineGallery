@@ -30,7 +30,7 @@ public class Image {
 
     private boolean isPrivate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
