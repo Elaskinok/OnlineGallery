@@ -1,1 +1,0 @@
-# OnlineGallery | FOR BACK_END DEVELOPER
