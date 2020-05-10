@@ -57,6 +57,8 @@ public class ImageService {
                 .filter(v -> !v.isPrivate())
                 .collect(Collectors.toList());
 
+        filterImagesByAlbumPrivacy(publicImages);
+
         Collections.shuffle(publicImages, new Random(11));
 
         List<Image> requiredImages = new ArrayList<>();
@@ -75,6 +77,10 @@ public class ImageService {
         }
 
         return imageResponses;
+    }
+
+    private void filterImagesByAlbumPrivacy(List<Image> publicImages) {
+        publicImages.removeIf(image -> image.getAlbum().isPrivate());
     }
 
     public UserImageResponse findImageById(UserPrincipal userPrincipal, Long imageId) {
