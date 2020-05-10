@@ -22,15 +22,15 @@ All interface elements are clear and have description or simple view. As well, t
 ## Improvement examples
 * ### Adding possibility of logging in during registration. The same story about signing up.
 #### Before
-![bad_login](UX_img/bad_login.jpg)
-![bad_signup](UX_img/bad_signup.jpg)
+![bad_login](ux_img/bad_login.jpg)
+![bad_signup](ux_img/bad_signup.jpg)
 #### After
-![good_login](UX_img/good_login.jpg)
-![good_signup](UX_img/good_signup.jpg)
+![good_login](ux_img/good_login.jpg)
+![good_signup](ux_img/good_signup.jpg)
 * ### Mobile device adapting
 #### Before
-![phone_nonadapted](UX_img/phone_nonadapted.jpg)
+![phone_nonadapted](ux_img/phone_nonadapted.jpg)
 #### After
-![phone_adapted](UX_img/phone_adapted.jpg)
+![phone_adapted](ux_img/phone_adapted.jpg)
 * ### Making button on the upbar is clickable
-![upbar_button](UX_img/upbar_button.jpg)
+![upbar_button](ux_img/upbar_button.jpg)
